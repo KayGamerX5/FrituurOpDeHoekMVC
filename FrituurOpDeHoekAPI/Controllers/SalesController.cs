@@ -62,7 +62,7 @@ namespace FrituurOpDeHoekAPI.Controllers
         // PUT: api/Sales/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         /// <summary>
-        /// This function allows for the creation of
+        /// This function allows for the updating of a specific sale
         /// </summary>
         /// <param name="id"></param>
         /// <param name="sale"></param>
@@ -98,6 +98,11 @@ namespace FrituurOpDeHoekAPI.Controllers
 
         // POST: api/Sales
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// This function allows for the creation of a new sale
+        /// </summary>
+        /// <param name="sale"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<Sale>> PostSale(Sale sale)
         {
@@ -112,6 +117,11 @@ namespace FrituurOpDeHoekAPI.Controllers
         }
 
         // DELETE: api/Sales/5
+        /// <summary>
+        /// This function allows for the deletion of a sale by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSale(int id)
         {

@@ -19,17 +19,16 @@ namespace FrituurOpDeHoekMVC.Controllers
             _context = context;
         }
 
-        // GET: Products
+        // GET: Products | Retrieves a list of all products and displays it to the user
         public async Task<IActionResult> Index()
         {
             IEnumerable<Product> products = null;
             using (var client = new HttpClient())
             {
+                //Setting the base address of the API
                 client.BaseAddress = new Uri("https://localhost:7115/api/");
 
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
+                //Making a HttpGet Request
                 var responseTask = client.GetAsync("products");
                 responseTask.Wait();
 
@@ -54,18 +53,19 @@ namespace FrituurOpDeHoekMVC.Controllers
             return View(products);
         }
 
-        // GET: Products/Details/5
+        // GET: Products/Details/5 | Retireves a specific product to display its contents to the user
         public IActionResult Details(Product product)
         {
 
             using (var client = new HttpClient())
             {
+                //Setting the base address of the API
                 client.BaseAddress = new Uri("https://localhost:7115/api/products/");
 
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
+                //Converting the id of the requested product to a string for routing purposes
                 string selectedProductId = product.Id.ToString();
+
+                //Making a HttpGet Request
                 var responseTask = client.GetAsync(selectedProductId);
                 responseTask.Wait();
 
@@ -89,6 +89,7 @@ namespace FrituurOpDeHoekMVC.Controllers
             return View(product);
         }
 
+        //Post : products | Allows the user to create a new product in the database
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Set<Category>(), "Id", "Name");
@@ -103,11 +104,10 @@ namespace FrituurOpDeHoekMVC.Controllers
 
             using (var client = new HttpClient())
             {
+                //Setting the base address of the API
                 client.BaseAddress = new Uri("https://localhost:7115/api/");
 
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
+                //Making a HttpPost Request
                 var responseTask = client.PostAsJsonAsync("products", product);
                 responseTask.Wait();
 
@@ -136,11 +136,10 @@ namespace FrituurOpDeHoekMVC.Controllers
             Product product = new Product();
             using (var client = new HttpClient())
             {
+                //Setting the base address of the API
                 client.BaseAddress = new Uri("https://localhost:7115/api/products/");
 
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
+                //Making the HttpGet Request so the user can see the data they are about to edit  
                 var responseTask = client.GetAsync(id.ToString());
                 responseTask.Wait();
 
@@ -170,12 +169,13 @@ namespace FrituurOpDeHoekMVC.Controllers
         {
             using (var client = new HttpClient())
             {
+                //Setting the base address of the API
                 client.BaseAddress = new Uri("https://localhost:7115/api/products/");
 
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
+                //Converting the id of the selected item for routing purposes
                 string selectedProductId = product.Id.ToString();
+
+                //Making the HttpPut request aswell as converting the data to a json file
                 var responseTask = client.PutAsJsonAsync(selectedProductId, product);
                 responseTask.Wait();
 
@@ -239,10 +239,6 @@ namespace FrituurOpDeHoekMVC.Controllers
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri("https://localhost:7115/api/products/");
-
-                //Called Member default GET All records  
-                //GetAsync to send a GET request   
-                // PutAsync to send a PUT request  
                 string selectedProductId = product.Id.ToString();
                 var responseTask = client.DeleteAsync(selectedProductId);
                 responseTask.Wait();

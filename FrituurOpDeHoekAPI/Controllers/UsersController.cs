@@ -22,6 +22,10 @@ namespace FrituurOpDeHoekAPI.Controllers
         }
 
         // GET: api/Users
+        /// <summary>
+        /// This function retireves all users from the database
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
@@ -33,6 +37,11 @@ namespace FrituurOpDeHoekAPI.Controllers
         }
 
         // GET: api/Users/5
+        /// <summary>
+        /// This function retrieves a specific user from the database by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(int id)
         {
@@ -52,6 +61,12 @@ namespace FrituurOpDeHoekAPI.Controllers
 
         // PUT: api/Users/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// This function allows for the updating of a specific user
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUser(int id, User user)
         {
@@ -83,6 +98,11 @@ namespace FrituurOpDeHoekAPI.Controllers
 
         // POST: api/Users
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /// <summary>
+        /// This function allows for the creation of a new user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<ActionResult<User>> PostUser(User user)
         {
@@ -97,6 +117,11 @@ namespace FrituurOpDeHoekAPI.Controllers
         }
 
         // DELETE: api/Users/5
+        /// <summary>
+        /// This function allows for the deletion of a user by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUser(int id)
         {
