@@ -13,8 +13,8 @@ namespace FrituurOpDeHoekAPI.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Sale> Sales { get; set; }
 
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) 
-        { 
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
+        {
 
         }
 
@@ -27,3 +27,4 @@ namespace FrituurOpDeHoekAPI.Data
         }
     }
 }
+
