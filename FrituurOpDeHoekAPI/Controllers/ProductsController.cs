@@ -33,7 +33,7 @@ namespace FrituurOpDeHoekAPI.Controllers
           {
               return NotFound();
           }
-            return await _context.Products.ToListAsync();
+            return await _context.Products.Include(c => c.Category).ToListAsync();
         }
 
         // GET: api/Products/5
@@ -49,7 +49,7 @@ namespace FrituurOpDeHoekAPI.Controllers
           {
               return NotFound();
           }
-            var product = await _context.Products.FindAsync(id);
+            var product = await _context.Products.Include(c => c.Category).FirstOrDefaultAsync(x => x.Id == id);
 
             if (product == null)
             {

@@ -22,7 +22,7 @@ namespace FrituurOpDeHoekMVC.Controllers
         // GET: Categories
         public async Task<IActionResult> Index()
         {
-            IEnumerable<Category> categories = null;
+            IEnumerable<Models.Category> categories = null;
             using (var client = new HttpClient())
             {
                 //Setting the base address of the API
@@ -57,18 +57,33 @@ namespace FrituurOpDeHoekMVC.Controllers
         // GET: Categories/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Categories == null)
+            Category category = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/categories/");
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
 
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View(category);
         }
 
@@ -85,27 +100,64 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name")] Category category)
         {
-            if (ModelState.IsValid)
+            using (var client = new HttpClient())
             {
-                _context.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/");
+
+                //Making a HttpPost Request
+                var responseTask = client.PostAsJsonAsync("categories", category);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
-            return View(category);
+            return RedirectToAction("Index");
         }
 
         // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Categories == null)
+            Category category = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/categories/");
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
             return View(category);
         }
@@ -117,49 +169,65 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Category category)
         {
-            if (id != category.Id)
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/categories/");
 
-            if (ModelState.IsValid)
-            {
-                try
+                //Making a HttpPost Request
+                var responseTask = client.PutAsJsonAsync(id.ToString(), category);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
                 {
-                    _context.Update(category);
-                    await _context.SaveChangesAsync();
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CategoryExists(category.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(category);
+            return RedirectToAction("Index"); ;
         }
 
         // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Categories == null)
+            Category category = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/categories/");
 
-            var category = await _context.Categories
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
 
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View(category);
         }
 
@@ -168,18 +236,33 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Categories == null)
-            {
-                return Problem("Entity set 'ApplicationDbContext.Categories'  is null.");
-            }
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
-            {
-                _context.Categories.Remove(category);
-            }
             
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            using (var client = new HttpClient())
+            {
+                Category category = new Category();
+                client.BaseAddress = new Uri("https://localhost:7115/api/categories/");
+                string selectedCategory = id.ToString();
+                var responseTask = client.DeleteAsync(selectedCategory);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Category>();
+                    readTask.Wait();
+
+                    category = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return RedirectToAction("Index");
         }
 
         private bool CategoryExists(int id)

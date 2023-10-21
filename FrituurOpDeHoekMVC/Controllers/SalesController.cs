@@ -22,26 +22,67 @@ namespace FrituurOpDeHoekMVC.Controllers
         // GET: Sales
         public async Task<IActionResult> Index()
         {
-              return _context.Sales != null ? 
-                          View(await _context.Sales.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Sales'  is null.");
+            IEnumerable<Sale> sales = null;
+            using (var client = new HttpClient())
+            {
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/");
+
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync("sales");
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<IList<Sale>>();
+                    readTask.Wait();
+
+                    sales = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    sales = Enumerable.Empty<Sale>();
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View(sales);
         }
 
         // GET: Sales/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Sales == null)
+            Sale sale = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/sales/");
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
 
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View(sale);
         }
 
@@ -58,27 +99,64 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description")] Sale sale)
         {
-            if (ModelState.IsValid)
+            using (var client = new HttpClient())
             {
-                _context.Add(sale);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/");
+
+                //Making a HttpPost Request
+                var responseTask = client.PostAsJsonAsync("sales", sale);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
-            return View(sale);
+            return RedirectToAction("Index");
         }
 
         // GET: Sales/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Sales == null)
+            Sale sale = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/sales/");
 
-            var sale = await _context.Sales.FindAsync(id);
-            if (sale == null)
-            {
-                return NotFound();
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
             return View(sale);
         }
@@ -90,49 +168,65 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description")] Sale sale)
         {
-            if (id != sale.Id)
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/sales/");
 
-            if (ModelState.IsValid)
-            {
-                try
+                //Making a HttpPost Request
+                var responseTask = client.PutAsJsonAsync(id.ToString(), sale);
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
                 {
-                    _context.Update(sale);
-                    await _context.SaveChangesAsync();
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!SaleExists(sale.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
                 }
-                return RedirectToAction(nameof(Index));
             }
-            return View(sale);
+            return RedirectToAction("Index"); ;
         }
 
         // GET: Sales/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Sales == null)
+            Sale sale = null;
+            using (var client = new HttpClient())
             {
-                return NotFound();
-            }
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/sales/");
 
-            var sale = await _context.Sales
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sale == null)
-            {
-                return NotFound();
-            }
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync(id.ToString());
+                responseTask.Wait();
 
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
             return View(sale);
         }
 
@@ -141,18 +235,31 @@ namespace FrituurOpDeHoekMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Sales == null)
+            using (var client = new HttpClient())
             {
-                return Problem("Entity set 'ApplicationDbContext.Sales'  is null.");
+                Sale sale = new Sale();
+                client.BaseAddress = new Uri("https://localhost:7115/api/sales/");
+                string selectedSale = id.ToString();
+                var responseTask = client.DeleteAsync(selectedSale);
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Sale>();
+                    readTask.Wait();
+
+                    sale = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
             }
-            var sale = await _context.Sales.FindAsync(id);
-            if (sale != null)
-            {
-                _context.Sales.Remove(sale);
-            }
-            
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         private bool SaleExists(int id)
