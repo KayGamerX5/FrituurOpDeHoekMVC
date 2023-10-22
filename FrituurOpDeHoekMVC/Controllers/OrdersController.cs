@@ -226,5 +226,39 @@ namespace FrituurOpDeHoekMVC.Controllers
             return RedirectToAction("Index");
 
         }
+
+        public IActionResult ViewCurrentOrder()
+        {
+            Order order = null;
+            using (var client = new HttpClient())
+            {
+                //Setting the base address of the API
+                client.BaseAddress = new Uri("https://localhost:7115/api/orders/");
+
+                //Converting the id of the requested product to a string for routing purposes
+
+                //Making a HttpGet Request
+                var responseTask = client.GetAsync("1");
+                responseTask.Wait();
+
+                //To store result of web api response.   
+                var result = responseTask.Result;
+
+                //If success received   
+                if (result.IsSuccessStatusCode)
+                {
+                    var readTask = result.Content.ReadAsAsync<Order>();
+                    readTask.Wait();
+
+                    order = readTask.Result;
+                }
+                else
+                {
+                    //Error response received   
+                    ModelState.AddModelError(string.Empty, "Server error try after some time.");
+                }
+            }
+            return View(order);
+        }
     }
 }

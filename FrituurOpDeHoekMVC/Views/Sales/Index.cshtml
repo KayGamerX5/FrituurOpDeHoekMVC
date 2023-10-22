@@ -1,22 +1,22 @@
 ﻿@model IEnumerable<FrituurOpDeHoekMVC.Models.Sale>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Aanbiedingen";
 }
 
-<h1>Index</h1>
+<h1>Aanbiedingen</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a class="btn btn-primary" asp-action="Create">Create New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayName("Naam")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+                @Html.DisplayName("Beschrijving")
             </th>
             <th></th>
         </tr>

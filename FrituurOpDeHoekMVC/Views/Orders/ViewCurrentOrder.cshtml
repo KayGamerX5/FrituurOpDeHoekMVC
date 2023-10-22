@@ -1,0 +1,59 @@
+﻿@model FrituurOpDeHoekMVC.Models.Order
+
+@{
+    ViewData["Title"] = "Uw bestelling";
+}
+
+<h1>Uw bestelling:</h1>
+
+<div>
+    <h4>Order</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Naam")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Prijs")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Gereedheidsstatus")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ReadynessState)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayName("Verwachte duur")
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ReadynessEstimateTimer)
+        </dd>
+        <div><p></p></div>
+        <div>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayName("Producten")
+                </dt>
+                @foreach (var item in Model.Products)
+                {
+                    <div>
+                        <dd class="col-sm-10">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </dd>
+                    </div>
+                }
+
+            </dl>
+        </div>
+    </dl>
+</div>
+<div>
+    <a class="btn btn-primary" asp-action="Index">Terug</a>
+</div>

@@ -49,7 +49,7 @@ namespace FrituurOpDeHoekAPI.Controllers
           {
               return NotFound();
           }
-            var order = await _context.Orders.FindAsync(id);
+            var order = await _context.Orders.Include(p => p.Products).FirstOrDefaultAsync(x => x.Id == id);
 
             if (order == null)
             {
